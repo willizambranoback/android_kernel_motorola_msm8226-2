@@ -20,9 +20,7 @@
 #include <linux/device.h>
 #include <linux/slab.h>
 #include <linux/cpufreq.h>
-#ifdef CONFIG_POWERSUSPEND
-#include <linux/powersuspend.h>
-#endif
+#include <linux/lcd_notify.h>
 #include <linux/mutex.h>
 #include <linux/input.h>
 #include <linux/math64.h>
@@ -90,6 +88,7 @@ static struct cpu_hotplug {
 	.fast_lane_load = DEFAULT_FAST_LANE_LOAD
 };
 
+static struct notifier_block notif;
 static struct workqueue_struct *hotplug_wq;
 static struct workqueue_struct *susp_wq;
 static struct delayed_work hotplug_work;
@@ -531,7 +530,7 @@ static void __ref msm_hotplug_resume(struct work_struct *work)
 		reschedule_hotplug_work();
 }
 
-static void __msm_hotplug_suspend(struct power_suspend *handler)
+static void __msm_hotplug_suspend(void)
 {
 	if (!hotplug.msm_enabled || hotplug.suspended)
 		return;
@@ -541,7 +540,7 @@ static void __msm_hotplug_suspend(struct power_suspend *handler)
 				 msecs_to_jiffies(hotplug.suspend_defer_time * 1000)); 
 }
 
-static void __msm_hotplug_resume(struct power_suspend *handler)
+static void __msm_hotplug_resume(void)
 {
 	if (!hotplug.msm_enabled)
 		return;
@@ -551,10 +550,22 @@ static void __msm_hotplug_resume(struct power_suspend *handler)
 	queue_work_on(0, susp_wq, &hotplug.resume_work);
 }
 
-static struct power_suspend msm_hotplug_power_suspend_driver = {
-	.suspend = __msm_hotplug_suspend,
-	.resume = __msm_hotplug_resume,
-};
+static int lcd_notifier_callback(struct notifier_block *this,
+				unsigned long event, void *data)
+{
+	switch (event) {
+	case LCD_EVENT_ON_START:
+			__msm_hotplug_resume();
+			break;
+	case LCD_EVENT_OFF_END:
+			__msm_hotplug_suspend();
+			break;
+	default:
+			break;
+	}
+
+	return NOTIFY_OK;
+}
 
 static void hotplug_input_event(struct input_handle *handle, unsigned int type,
 				unsigned int code, int value)
@@ -670,7 +681,9 @@ static int __ref msm_hotplug_start(void)
 		goto err_out;
 	}
 
-	register_power_suspend(&msm_hotplug_power_suspend_driver);
+	notif.notifier_call = lcd_notifier_callback;
+	if (lcd_register_client(&notif))
+		return -EINVAL;
 
 	ret = input_register_handler(&hotplug_input_handler);
 	if (ret) {
@@ -739,7 +752,7 @@ static void msm_hotplug_stop(void)
 	mutex_destroy(&stats.stats_mutex);
 	kfree(stats.load_hist);
 
-	unregister_power_suspend(&msm_hotplug_power_suspend_driver);
+	lcd_unregister_client(&notif);
 	input_unregister_handler(&hotplug_input_handler);
 
 	destroy_workqueue(susp_wq);
