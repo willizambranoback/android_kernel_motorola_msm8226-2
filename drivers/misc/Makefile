@@ -73,6 +73,7 @@ obj-$(CONFIG_QSEECOM) += qseecom.o
 obj-$(CONFIG_QFP_FUSE) += qfp_fuse.o
 obj-$(CONFIG_TI_DRV2667) += ti_drv2667.o
 obj-$(CONFIG_QPNP_MISC) += qpnp-misc.o
+<<<<<<< HEAD
 obj-$(CONFIG_HAPTIC_DRV2605)	+= drv2605.o
 obj-$(CONFIG_MOT_UTAG) += utag/
 obj-$(CONFIG_MMI_FACTORY) += mmi-factory.o
@@ -93,3 +94,7 @@ obj-$(CONFIG_SENSORS_BMG) += bmg160_driver.o bmg160.o
 obj-$(CONFIG_SENSORS_BMM050) += bmm050_driver.o bmm050.o
 obj-$(CONFIG_SENSORS_STML0XX) += stml0xx/
 obj-$(CONFIG_UID_CPUTIME) += uid_cputime.o
+=======
+obj-$(CONFIG_UID_CPUTIME) 	+= uid_cputime.o
+obj-$(CONFIG_HPH_HIGH_PERF) += sound_control.o
+>>>>>>> 335eb8c... ASoC: wcd9306: Enable class AB and expose sysfs
