@@ -9,6 +9,13 @@ yellow='\033[0;33m'
 red='\033[0;31m'
 nocol='\033[0m'
 
+# Init Fields
+QS_V_MAJOR=1
+QS_V_MINOR=0
+QS_VERSION=v$QS_V_MAJOR.$QS_V_MINOR
+QS_DATE=$(date +%Y%m%d)
+QS_TOOLCHAIN=/home/joker/q6.4/bin/arm-eabi-
+
 echo -e "$yellow*****************************************************"
 echo "                Cleaning source         "
 echo -e "*****************************************************$nocol"
@@ -16,12 +23,13 @@ echo -e "*****************************************************$nocol"
 rm -rf arch/arm/boot/*.dtb
 make clean && make mrproper
 
-export CROSS_COMPILE=/home/joker/q6.4/bin/arm-QUVNTNM_TOOLCHAIN-linux-musleabihf-
+export CROSS_COMPILE=$QS_TOOLCHAIN
 export ARCH=arm
 export KBUILD_BUILD_USER="WilliamZambrano"
 export KBUILD_BUILD_HOST="LinuxLite"
+export LOCALVERSION=-Metis_Kernel-$QS_VERSION-$QS_DATE
 
-make metis_defconfig
+make falcon_defconfig
 echo -e "$blue*****************************************************"
 echo "           Building Metis_Kernel         "
 echo -e "*****************************************************$nocol"
