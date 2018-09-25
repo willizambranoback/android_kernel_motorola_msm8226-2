@@ -132,11 +132,7 @@ struct mem_cgroup_zone {
 /*
  * From 0 .. 100.  Higher means more swappy.
  */
-<<<<<<< HEAD
 int vm_swappiness = 100;
-=======
-int vm_swappiness = 45;
->>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 long vm_total_pages;	/* The total number of pages which the VM controls */
 
 static LIST_HEAD(shrinker_list);

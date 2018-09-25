@@ -48,8 +48,5 @@ obj-$(CONFIG_MMI_PANEL_NOTIFICATIONS) += mmi_panel_notifier.o
 
 obj-$(CONFIG_MDSS_QUICKDRAW) += mdss_quickdraw.o
 
-<<<<<<< HEAD
 obj-$(CONFIG_FB_MSM_MDSS_KCAL_CTRL) += mdss_mdp_kcal_ctrl.o
-=======
->>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 obj-$(CONFIG_FB_MSM_MDSS) += lcd_notify.o
