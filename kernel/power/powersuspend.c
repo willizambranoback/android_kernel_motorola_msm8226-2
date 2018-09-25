@@ -48,8 +48,11 @@ static DEFINE_SPINLOCK(state_lock);
 static int state; // Yank555.lu : Current powersave state (screen on / off)
 static int mode;  // Yank555.lu : Current powersave mode  (kernel / userspace / panel / hybrid)
 
+<<<<<<< HEAD
 bool screen_on = true;
 
+=======
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 void register_power_suspend(struct power_suspend *handler)
 {
 	struct list_head *pos;
@@ -138,8 +141,11 @@ abort_resume:
 	mutex_unlock(&power_suspend_lock);
 }
 
+<<<<<<< HEAD
 bool power_suspended = false;
 
+=======
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 void set_power_suspend_state(int new_state)
 {
 	unsigned long irqflags;
@@ -150,14 +156,20 @@ void set_power_suspend_state(int new_state)
 		pr_info("[POWERSUSPEND] state activated.\n");
 		#endif
 		state = new_state;
+<<<<<<< HEAD
 		power_suspended = true;
+=======
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 		queue_work(suspend_work_queue, &power_suspend_work);
 	} else if (state == POWER_SUSPEND_ACTIVE && new_state == POWER_SUSPEND_INACTIVE) {
 		#ifdef POWER_SUSPEND_DEBUG
 		pr_info("[POWERSUSPEND] state deactivated.\n");
 		#endif
 		state = new_state;
+<<<<<<< HEAD
 		power_suspended = false;
+=======
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 		queue_work(suspend_work_queue, &power_resume_work);
 	}
 	spin_unlock_irqrestore(&state_lock, irqflags);
@@ -326,4 +338,9 @@ module_exit(power_suspend_exit);
 MODULE_AUTHOR("Paul Reioux <reioux@gmail.com> / Jean-Pierre Rasquin <yank555.lu@gmail.com>");
 MODULE_DESCRIPTION("power_suspend - A replacement kernel PM driver for"
         "Android's deprecated early_suspend/late_resume PM driver!");
+<<<<<<< HEAD
 MODULE_LICENSE("GPL v2");
+=======
+MODULE_LICENSE("GPL v2");
+
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7

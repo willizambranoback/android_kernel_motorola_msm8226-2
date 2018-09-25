@@ -790,6 +790,9 @@ static int mdss_dsi_panel_on(struct mdss_panel_data *pdata)
 	mipi  = &pdata->panel_info.mipi;
 
 	mfd = pdata->mfd;
+
+	lcd_notifier_call_chain(LCD_EVENT_ON_START);
+
 	pr_info("%s+: ctrl=%pK ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
 	lcd_notifier_call_chain(LCD_EVENT_ON_START);
@@ -904,6 +907,9 @@ static int mdss_dsi_panel_off(struct mdss_panel_data *pdata)
 				panel_data);
 
 	mfd = pdata->mfd;
+
+	lcd_notifier_call_chain(LCD_EVENT_OFF_START);
+
 	pr_info("%s+: ctrl=%pK ndx=%d\n", __func__, ctrl, ctrl->ndx);
 
 	lcd_notifier_call_chain(LCD_EVENT_OFF_START);

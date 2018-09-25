@@ -44,13 +44,21 @@ struct power_suspend {
 	void (*resume)(struct power_suspend *h);
 };
 
+<<<<<<< HEAD
 extern bool screen_on;
+=======
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 void register_power_suspend(struct power_suspend *handler);
 void unregister_power_suspend(struct power_suspend *handler);
 
 void set_power_suspend_state_autosleep_hook(int new_state);
 void set_power_suspend_state_panel_hook(int new_state);
 
+<<<<<<< HEAD
 extern bool power_suspended;
 
 #endif
+=======
+#endif
+
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7

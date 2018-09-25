@@ -25,6 +25,10 @@ config POWERSUSPEND
 	  Call early suspend handlers when the user requested sleep state
 	  changes.
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 17c8e3f1579629539989a2bfad8bebbbf7872fa7
 config HIBERNATE_CALLBACKS
 	bool
 
@@ -269,6 +273,26 @@ config PM_CLK
 config PM_GENERIC_DOMAINS
 	bool
 	depends on PM
+
+config WQ_POWER_EFFICIENT_DEFAULT
+	bool "Enable workqueue power-efficient mode by default"
+	depends on PM
+	default n
+	help
+	  Per-cpu workqueues are generally preferred because they show
+	  better performance thanks to cache locality; unfortunately,
+	  per-cpu workqueues tend to be more power hungry than unbound
+	  workqueues.
+
+	  Enabling workqueue.power_efficient kernel parameter makes the
+	  per-cpu workqueues which were observed to contribute
+	  significantly to power consumption unbound, leading to measurably
+	  lower power usage at the cost of small performance overhead.
+
+	  This config option determines whether workqueue.power_efficient
+	  is enabled by default.
+
+	  If in doubt, say N.
 
 config PM_GENERIC_DOMAINS_RUNTIME
 	def_bool y
