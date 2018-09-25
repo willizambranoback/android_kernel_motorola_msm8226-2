@@ -1,0 +1,87 @@
+#!/sbin/sh
+
+# * Installer Scrip Based on AnyKernel 2 by osm0sis
+
+# Main variables
+OUTFD="/proc/self/fd/$2";
+ZIP="$3";
+DIR=`dirname "$ZIP"`;
+
+# Methods
+abort() {
+	ui_print "$1";
+	exit "$2";
+}
+
+file_getprop() { 
+	grep "^$2" "$1" | cut -d= -f2; 
+}
+
+getprop() { 
+	test -e /sbin/getprop && /sbin/getprop $1 || file_getprop /default.prop $1; 
+}
+
+set_perm() {
+	chown $1:$2 $4;
+	chmod $3 $4;
+}
+
+set_perm_recursive() {
+	dirs=$(echo $* | awk '{ print substr($0, index($0,$5)) }');
+	for i in $dirs; do
+		chown -R $1.$2 $i; chown -R $1:$2 $i;
+		find "$i" -type d -exec chmod $3 {} +;
+		find "$i" -type f -exec chmod $4 {} +;
+	done;
+}
+
+set_progress() { 
+	echo "set_progress $1 $2" > "$OUTFD"; 
+}
+
+ui_print() {
+	echo "ui_print $1" > "$OUTFD";
+	echo "ui_print" > "$OUTFD";
+}
+
+# Let's begin
+ui_print " ";
+mkdir -p /tmp/anykernel/bin;
+cd /tmp/anykernel;
+unzip -o "$ZIP";
+if [ $? != 0 -o -z "$(ls /tmp/anykernel/tools)" ]; then
+  abort "Unzip failed. Aborting...";
+fi;
+chmod -R 755 /tmp/anykernel/tools /tmp/anykernel/bin;
+# bb=/tmp/anykernel/tools/busybox;
+
+ui_print "#";
+ui_print "#";
+ui_print "#  Metis Kernel  #";
+ui_print "#";
+ui_print "#  For Oreo/Pie AOSP/LOS falcon roms  #";
+ui_print "#";
+ui_print "#  willizambrano01 @ XDA Developers  #";
+ui_print "#";
+
+# Mount /system
+set_progress 0.134;
+ui_print " ";
+ui_print "*    Mounting system partition...  ";
+busybox mount /system;
+
+# Flash the kernel
+set_progress 0.67 5;
+ui_print " ";
+ui_print "#  Installing  kernel...  #";
+for i in $(busybox --list); do
+  busybox ln -fs busybox /tmp/anykernel/bin/$i;
+done;
+PATH="/tmp/anykernel/bin:$PATH" busybox ash /tmp/anykernel/anykernel.sh $2;
+
+# Clean up & finish
+busybox umount /system;
+cd /tmp;
+rm -rf kernel/;
+ui_print " ";
+ui_print "#  ENJOY  #";
